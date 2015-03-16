@@ -1,0 +1,200 @@
+﻿<%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>NAMRIA Product and Services Information System</title>
+    <link href="App_Themes\Site.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+
+    <style type="text/css">
+        
+        .main
+        {
+            min-height: 800px;
+        }
+        
+        .style5
+        {
+            font-size: small;
+        }
+        .style6
+        {
+            color: #FF0000;
+            text-decoration: underline;
+        }
+        .style8
+        {
+            text-decoration: underline;
+        }
+        .style9
+        {
+            width: 457px;
+            text-align: left;
+            height: 208px;
+        }
+        .style11
+        {
+            text-decoration: none;
+        }
+        .style15
+        {
+            width: 498px;
+            text-align: left;
+            height: 208px;
+        }
+        </style>
+</head>
+<body nowrap="nowrap">
+    <form id="Form1" runat="server">
+    <div class="page">
+        <div class="header">
+            <div class="title">
+                <h1>
+                    &nbsp;NPASIS 
+                </h1>
+
+                <h3 style="color: #FFFFFF">
+                    NAMRIA Product and Services Information System
+                </h3>
+            </div>
+
+            <div class="loginDisplay">                
+                <asp:LoginName ID="LoginName1" runat="server" />
+                <br/> 
+                <br/> <br/>
+
+                <asp:LoginStatus ID="LoginStatus1" runat="server" />
+            </div>
+
+            <div class="clear hideSkiplink">
+                <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
+                    <Items>
+                        <asp:MenuItem Text="Transaction" Value="Transaction">
+                            <asp:MenuItem Text="MSO Order Slip" Value="MSO Order Slip">
+                                <asp:MenuItem Text="Paid Order Slip" Value="Paid Order Slip"></asp:MenuItem>
+                                <%--<asp:MenuItem Text="Free Issue" Value="Free Issue"></asp:MenuItem>
+                                <asp:MenuItem Text="Stock Transfer" Value="Stock Transfer"></asp:MenuItem>
+                                <asp:MenuItem Text="Wastage" Value="Wastage"></asp:MenuItem>--%>
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="ICSU Order Slip" Value="ICSU Order Slip"></asp:MenuItem>
+                            <asp:MenuItem Text="Client Inquiry" Value="Client Inquiry"></asp:MenuItem>
+                            <asp:MenuItem Text="Client Feedback" Value="Client Feedback"></asp:MenuItem>
+                            <asp:MenuItem Text="Bank Transaction" Value="Bank Transaction"></asp:MenuItem>
+                        </asp:MenuItem>
+                        <asp:MenuItem Text="Inquiry" Value="Inquiry">
+                            <asp:MenuItem Text="Product Inquiry" NavigateUrl = "~/ProductInquiry.aspx" Value="Product Inquiry"></asp:MenuItem>
+                        </asp:MenuItem>
+                        <asp:MenuItem Text="Reports" Value="Reports">
+                            <asp:MenuItem Text="Product Inventory" Value="Product Inventory" 
+                                NavigateUrl = "~/ReportInventory.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="Product Inventory  Prooflists" 
+                                Value="Product Inventory  Prooflists" NavigateUrl = "~/ReportProduct.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="Detailed Collection" Value="Detailed Collection" NavigateUrl = "~/ReportDetailedCollection.aspx">
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Summary Collection" Value="Summary Collection" NavigateUrl = "~/ReportDetailedSales.aspx">
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Map Flow (Detail)" Value="Map Flow (Detail)" NavigateUrl = "~/ReportMapFlowDetailed.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="Map Flow (Summary)" Value="Map Flow (Summary)" NavigateUrl = "~/ReportMapFlowSummary.aspx">
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Product Monitoring" Value="Product Monitoring"  NavigateUrl="~/ReportReOrder.aspx">
+                            </asp:MenuItem>
+                             <asp:MenuItem Text="Top Saleable" Value="Top Saleable" 
+                                NavigateUrl="~/ReportTopSelling.aspx"></asp:MenuItem>
+                             <asp:MenuItem Text="Receipt and Issue of Charts, Maps and Books" Value="Top Saleable" 
+                                NavigateUrl="~/ReportReceiptAndIssue.aspx"></asp:MenuItem>
+                            <%--<asp:MenuItem Text="Stock Transfer Prooflists" 
+                                Value="Stock Transfer Prooflists"></asp:MenuItem>
+                            <asp:MenuItem Text="Free Issue Prooflists" Value="Free Issue Prooflists">
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Wastage Prooflists" Value="Wastage Prooflists">
+                            </asp:MenuItem>--%>
+                            <asp:MenuItem Text="Client Feedback Prooflists" 
+                                Value="Client Feedback Proolists"></asp:MenuItem>
+                            <asp:MenuItem NavigateUrl="~/ReportTopSectotalClients.aspx" 
+                             Text="Top Sectoral Clients" Value="Top Sectoral Clients"></asp:MenuItem>
+                        </asp:MenuItem>
+                        <asp:MenuItem Text="Maintenance" Value="Maintenance">
+                            <asp:MenuItem Text="MSO/ICSU Maintenance" NavigateUrl = "~/MapSalesOffice.aspx" Value="MSO/ICSU Maintenance">
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="MSO/ICSU Personnel Maintenance" NavigateUrl = "~/MSOPersonnel.aspx" 
+                                Value="MSO/ICSU Personnel Maintenance"></asp:MenuItem>
+                            <asp:MenuItem Text="Client Maintenance" Value="Client Maintenance" NavigateUrl = "~/Company.aspx">
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Product &amp; Inventory" 
+                                Value="Product &amp; Services Library" 
+                                NavigateUrl="~/ProductsAndServices.aspx"></asp:MenuItem>
+                            
+                            <asp:MenuItem Text="Product Classification Maintenance" 
+                                Value="Product Classification Maintenance" NavigateUrl="~/LibProductType.aspx">
+                            </asp:MenuItem>
+                            <asp:MenuItem Text="Field of Application Library" 
+                                Value="Field of Application Library" NavigateUrl = "~/FOAMaintenance.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="Sector Library" Value="Sector Library" NavigateUrl = "~/SectorLib.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="Division Library" Value="Division Library" NavigateUrl = "~/DivisionLib.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="Signatory Library" Value="Signatory Library" NavigateUrl = "~/SignatoryLib.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="User Maintenance" Value="User Maintenance" NavigateUrl = "~/UserLibrary.aspx"></asp:MenuItem>
+                        </asp:MenuItem>
+                    </Items>
+                </asp:Menu>
+            </div>
+        </div>
+        <div class="main">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server"/>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+
+    <div class="footer">
+
+
+        <table align="center" cellpadding="2" cellspacing="5" frame="void">
+            <tr>
+                <td class="style9">
+                    <span class="style8">
+                    <strong>Important </strong>                    
+                    </span>                    
+                    <br /><br />
+                    Log off and exit after completing your transactions.
+                    <br />                    <br />
+                    For enhanced security, MSO-Personnel are suggested to change password once in a 
+                    while. You can also nominate a password thru email <a class="style11" 
+                        href="mailto:webmaster@NAMRIA.gov.ph">webmaster@NAMRIA.gov.ph</a>.<br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                </td>
+                <td class="style15">
+                    <span class="style6"><strong>Warning : </strong> </span><br class="style8" />
+                    <br class="style8" />
+                    <span class="style5">This service is for authorized NAMRIA MSO Personnel only. 
+                    It is a criminal offense to:
+                    <br />
+                    <br />
+                    i. Obtain access to data without authority
+                    <br />
+                    ii. Corrupt, alter, steal, or destroy data
+                    <br />
+                    iii. Interfere in computer system or server;
+                    <br />
+                    iv. Introduce computer virus.
+                    <br />
+                    <br />
+                    Penalty shall consist of minimum fine of PhP 100,000 and a maximum commensurate 
+                    to the damage incurred and mandatory imprisonment of six (6) months to three (3) 
+                    years under Republic Act No. 8792, otherwise known as the E-Commerce Act of the 
+                    Philippines.</span></td>
+            </tr>
+        </table>
+        
+    </div>
+    </form>
+</body>
+</html>

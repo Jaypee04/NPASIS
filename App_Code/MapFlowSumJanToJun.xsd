@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="MapFlowSumJanToJun" targetNamespace="http://tempuri.org/MapFlowSumJanToJun.xsd" xmlns:mstns="http://tempuri.org/MapFlowSumJanToJun.xsd" xmlns="http://tempuri.org/MapFlowSumJanToJun.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Web.config" AppSettingsPropertyName="NPASISConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="NPASISConnectionString (Web.config)" ParameterPrefix="@" PropertyReference="AppConfig.System.Configuration.ConfigurationManager.0.ConnectionStrings.NPASISConnectionString.ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="JanToJunSumTableAdapter" GeneratorDataComponentClassName="JanToJunSumTableAdapter" Name="DTJanToJunSum" UserDataComponentName="JanToJunSumTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="NPASISConnectionString (Web.config)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        PRODINV.MSOCODE, PRODTYPELIB.TYPEDESC, PRODFLE.PRODDESC, PRODINV.CODE, SUM(PRODINV.COUNT) AS balance, ISNULL(JANORDER.JANORD, 0) 
+                         AS JANORD, ISNULL(JANUARY.JAN, 0) AS JAN, ISNULL(FEBORDER.FEBORD, 0) AS FEBORD, ISNULL(FEBRUARY.FEB, 0) AS FEB, ISNULL(MARORDER.MARORD, 0) 
+                         AS MARORD, ISNULL(MARCH.MAR, 0) AS MAR, ISNULL(APRORDER.APRORD, 0) AS APRORD, ISNULL(APRIL.APR, 0) AS APR, ISNULL(MAYORDER.MAYORD, 0) 
+                         AS MAYORD, ISNULL(MAY.MAY, 0) AS MAY, ISNULL(JUNORDER.JUNORD, 0) AS JUNORD, ISNULL(JUNE.JUN, 0) AS JUN, ISNULL(JANORDER.JANORD, 0) 
+                         + ISNULL(FEBORDER.FEBORD, 0) + ISNULL(MARORDER.MARORD, 0) + ISNULL(APRORDER.APRORD, 0) + ISNULL(MAYORDER.MAYORD, 0) 
+                         + ISNULL(JUNORDER.JUNORD, 0) AS TOTAL1, ISNULL(JANUARY.JAN, 0) + ISNULL(FEBRUARY.FEB, 0) + ISNULL(MARCH.MAR, 0) + ISNULL(APRIL.APR, 0) 
+                         + ISNULL(MAY.MAY, 0) + ISNULL(JUNE.JUN, 0) AS TOTAL, SUM(PRODINV.COUNT) - (ISNULL(JANUARY.JAN, 0) + ISNULL(FEBRUARY.FEB, 0) + ISNULL(MARCH.MAR, 
+                         0) + ISNULL(APRIL.APR, 0) + ISNULL(MAY.MAY, 0) + ISNULL(JUNE.JUN, 0)) AS COPIES, PRICEOFPRODUCT.UNITPRICE * (SUM(PRODINV.COUNT) 
+                         - (ISNULL(JANUARY.JAN, 0) + ISNULL(FEBRUARY.FEB, 0) + ISNULL(MARCH.MAR, 0) + ISNULL(APRIL.APR, 0) + ISNULL(MAY.MAY, 0) + ISNULL(JUNE.JUN, 0))) 
+                         AS AMOUNT, PRICEOFPRODUCT.UNITPRICE
+FROM            PRODINV LEFT OUTER JOIN
+                         PRODTYPELIB ON PRODINV.TYPE = PRODTYPELIB.TYPE LEFT OUTER JOIN
+                         PRODFLE ON PRODFLE.TYPE = PRODINV.TYPE AND PRODFLE.CODE = PRODINV.CODE LEFT OUTER JOIN
+                             (SELECT        PRICE AS UNITPRICE, CODE, TYPE
+                               FROM            PRODPRICE AS S
+                               WHERE        (EFFDATE =
+                                                             (SELECT        MAX(EFFDATE) AS Expr1
+                                                               FROM            PRODPRICE
+                                                               WHERE        (CODE = S.CODE) AND (EFFDATE &lt;= GETDATE())))) AS PRICEOFPRODUCT ON PRODINV.CODE = PRICEOFPRODUCT.CODE AND 
+                         PRODINV.TYPE = PRICEOFPRODUCT.TYPE LEFT OUTER JOIN
+                             (SELECT        TYPE, CODE, REORDER AS JANORD
+                               FROM            PRODFLE AS PRODFLE_6
+                               WHERE        (MONTH(DTE) = 1) AND (YEAR(DTE) = @YEAR)) AS JANORDER ON PRODINV.TYPE = JANORDER.TYPE AND 
+                         PRODINV.CODE = JANORDER.CODE LEFT OUTER JOIN
+                             (SELECT        ORDERFL.MSOCODE, ORDERFL.ORDERDATE, ORDERDT.TYPE, ORDERDT.CODE, ORDERDT.QTY AS JAN
+                               FROM            ORDERDT INNER JOIN
+                                                         ORDERFL ON ORDERFL.ORDERNO = ORDERDT.ORDERNO
+                               WHERE        (ORDERFL.MSOCODE = @MSOCODE) AND (MONTH(ORDERFL.ORDERDATE) = 1) AND (YEAR(ORDERFL.ORDERDATE) = @YEAR)) AS JANUARY ON 
+                         PRODINV.MSOCODE = JANUARY.MSOCODE AND PRODINV.TYPE = JANUARY.TYPE AND PRODINV.CODE = JANUARY.CODE LEFT OUTER JOIN
+                             (SELECT        TYPE, CODE, REORDER AS FEBORD
+                               FROM            PRODFLE AS PRODFLE_5
+                               WHERE        (MONTH(DTE) = 2) AND (YEAR(DTE) = @YEAR)) AS FEBORDER ON PRODINV.TYPE = FEBORDER.TYPE AND 
+                         PRODINV.CODE = FEBORDER.CODE LEFT OUTER JOIN
+                             (SELECT        ORDERFL_5.MSOCODE, ORDERFL_5.ORDERDATE, ORDERDT_5.TYPE, ORDERDT_5.CODE, ORDERDT_5.QTY AS FEB
+                               FROM            ORDERDT AS ORDERDT_5 INNER JOIN
+                                                         ORDERFL AS ORDERFL_5 ON ORDERFL_5.ORDERNO = ORDERDT_5.ORDERNO
+                               WHERE        (ORDERFL_5.MSOCODE = @MSOCODE) AND (MONTH(ORDERFL_5.ORDERDATE) = 2) AND (YEAR(ORDERFL_5.ORDERDATE) = @YEAR)) 
+                         AS FEBRUARY ON PRODINV.MSOCODE = FEBRUARY.MSOCODE AND PRODINV.TYPE = FEBRUARY.TYPE AND 
+                         PRODINV.CODE = FEBRUARY.CODE LEFT OUTER JOIN
+                             (SELECT        TYPE, CODE, REORDER AS MARORD
+                               FROM            PRODFLE AS PRODFLE_4
+                               WHERE        (MONTH(DTE) = 3) AND (YEAR(DTE) = @YEAR)) AS MARORDER ON PRODINV.TYPE = MARORDER.TYPE AND 
+                         PRODINV.CODE = MARORDER.CODE LEFT OUTER JOIN
+                             (SELECT        ORDERFL_4.MSOCODE, ORDERFL_4.ORDERDATE, ORDERDT_4.TYPE, ORDERDT_4.CODE, ORDERDT_4.QTY AS MAR
+                               FROM            ORDERDT AS ORDERDT_4 INNER JOIN
+                                                         ORDERFL AS ORDERFL_4 ON ORDERFL_4.ORDERNO = ORDERDT_4.ORDERNO
+                               WHERE        (ORDERFL_4.MSOCODE = @MSOCODE) AND (MONTH(ORDERFL_4.ORDERDATE) = 3) AND (YEAR(ORDERFL_4.ORDERDATE) = @YEAR)) AS MARCH ON
+                          PRODINV.MSOCODE = MARCH.MSOCODE AND PRODINV.TYPE = MARCH.TYPE AND PRODINV.CODE = MARCH.CODE LEFT OUTER JOIN
+                             (SELECT        TYPE, CODE, REORDER AS APRORD
+                               FROM            PRODFLE AS PRODFLE_3
+                               WHERE        (MONTH(DTE) = 4) AND (YEAR(DTE) = @YEAR)) AS APRORDER ON PRODINV.TYPE = APRORDER.TYPE AND 
+                         PRODINV.CODE = APRORDER.CODE LEFT OUTER JOIN
+                             (SELECT        ORDERFL_3.MSOCODE, ORDERFL_3.ORDERDATE, ORDERDT_3.TYPE, ORDERDT_3.CODE, ORDERDT_3.QTY AS APR
+                               FROM            ORDERDT AS ORDERDT_3 INNER JOIN
+                                                         ORDERFL AS ORDERFL_3 ON ORDERFL_3.ORDERNO = ORDERDT_3.ORDERNO
+                               WHERE        (ORDERFL_3.MSOCODE = @MSOCODE) AND (MONTH(ORDERFL_3.ORDERDATE) = 4) AND (YEAR(ORDERFL_3.ORDERDATE) = @YEAR)) AS APRIL ON 
+                         PRODINV.MSOCODE = APRIL.MSOCODE AND PRODINV.TYPE = APRIL.TYPE AND PRODINV.CODE = APRIL.CODE LEFT OUTER JOIN
+                             (SELECT        TYPE, CODE, REORDER AS MAYORD
+                               FROM            PRODFLE AS PRODFLE_2
+                               WHERE        (MONTH(DTE) = 5) AND (YEAR(DTE) = @YEAR)) AS MAYORDER ON PRODINV.TYPE = MAYORDER.TYPE AND 
+                         PRODINV.CODE = MAYORDER.CODE LEFT OUTER JOIN
+                             (SELECT        ORDERFL_2.MSOCODE, ORDERFL_2.ORDERDATE, ORDERDT_2.TYPE, ORDERDT_2.CODE, ORDERDT_2.QTY AS MAY
+                               FROM            ORDERDT AS ORDERDT_2 INNER JOIN
+                                                         ORDERFL AS ORDERFL_2 ON ORDERFL_2.ORDERNO = ORDERDT_2.ORDERNO
+                               WHERE        (ORDERFL_2.MSOCODE = @MSOCODE) AND (MONTH(ORDERFL_2.ORDERDATE) = 5) AND (YEAR(ORDERFL_2.ORDERDATE) = @YEAR)) AS MAY ON 
+                         PRODINV.MSOCODE = MAY.MSOCODE AND PRODINV.TYPE = MAY.TYPE AND PRODINV.CODE = MAY.CODE LEFT OUTER JOIN
+                             (SELECT        TYPE, CODE, REORDER AS JUNORD
+                               FROM            PRODFLE AS PRODFLE_1
+                               WHERE        (MONTH(DTE) = 6) AND (YEAR(DTE) = @YEAR)) AS JUNORDER ON PRODINV.TYPE = JUNORDER.TYPE AND 
+                         PRODINV.CODE = JUNORDER.CODE LEFT OUTER JOIN
+                             (SELECT        ORDERFL_1.MSOCODE, ORDERFL_1.ORDERDATE, ORDERDT_1.TYPE, ORDERDT_1.CODE, ORDERDT_1.QTY AS JUN
+                               FROM            ORDERDT AS ORDERDT_1 INNER JOIN
+                                                         ORDERFL AS ORDERFL_1 ON ORDERFL_1.ORDERNO = ORDERDT_1.ORDERNO
+                               WHERE        (ORDERFL_1.MSOCODE = @MSOCODE) AND (MONTH(ORDERFL_1.ORDERDATE) = 6) AND (YEAR(ORDERFL_1.ORDERDATE) = @YEAR)) AS JUNE ON 
+                         PRODINV.MSOCODE = JUNE.MSOCODE AND PRODINV.TYPE = JUNE.TYPE AND PRODINV.CODE = JUNE.CODE
+WHERE        (PRODINV.MSOCODE = @MSOCODE)
+GROUP BY PRODINV.MSOCODE, PRODTYPELIB.TYPEDESC, PRODFLE.PRODDESC, PRODINV.CODE, JANUARY.JAN, JANORDER.JANORD, FEBRUARY.FEB, 
+                         FEBORDER.FEBORD, MARCH.MAR, MARORDER.MARORD, APRIL.APR, APRORDER.APRORD, MAY.MAY, MAYORDER.MAYORD, JUNE.JUN, JUNORDER.JUNORD, 
+                         PRICEOFPRODUCT.UNITPRICE</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="MSOCODE" ColumnName="MSOCODE" DataSourceName="npasis.dbo.PRODINV" DataTypeServer="varchar(6)" DbType="AnsiString" Direction="Input" ParameterName="@MSOCODE" Precision="0" ProviderType="VarChar" Scale="0" Size="6" SourceColumn="MSOCODE" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="YEAR" ColumnName="" DataSourceName="" DataTypeServer="unknown" DbType="Decimal" Direction="Input" ParameterName="@YEAR" Precision="0" Scale="0" Size="0" SourceColumn="" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="MSOCODE" DataSetColumn="MSOCODE" />
+              <Mapping SourceColumn="TYPEDESC" DataSetColumn="TYPEDESC" />
+              <Mapping SourceColumn="PRODDESC" DataSetColumn="PRODDESC" />
+              <Mapping SourceColumn="CODE" DataSetColumn="CODE" />
+              <Mapping SourceColumn="balance" DataSetColumn="balance" />
+              <Mapping SourceColumn="JANORD" DataSetColumn="JANORD" />
+              <Mapping SourceColumn="JAN" DataSetColumn="JAN" />
+              <Mapping SourceColumn="FEBORD" DataSetColumn="FEBORD" />
+              <Mapping SourceColumn="FEB" DataSetColumn="FEB" />
+              <Mapping SourceColumn="MARORD" DataSetColumn="MARORD" />
+              <Mapping SourceColumn="MAR" DataSetColumn="MAR" />
+              <Mapping SourceColumn="APRORD" DataSetColumn="APRORD" />
+              <Mapping SourceColumn="APR" DataSetColumn="APR" />
+              <Mapping SourceColumn="MAYORD" DataSetColumn="MAYORD" />
+              <Mapping SourceColumn="MAY" DataSetColumn="MAY" />
+              <Mapping SourceColumn="JUNORD" DataSetColumn="JUNORD" />
+              <Mapping SourceColumn="JUN" DataSetColumn="JUN" />
+              <Mapping SourceColumn="TOTAL1" DataSetColumn="TOTAL1" />
+              <Mapping SourceColumn="TOTAL" DataSetColumn="TOTAL" />
+              <Mapping SourceColumn="COPIES" DataSetColumn="COPIES" />
+              <Mapping SourceColumn="AMOUNT" DataSetColumn="AMOUNT" />
+              <Mapping SourceColumn="UNITPRICE" DataSetColumn="UNITPRICE" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="MapFlowSumJanToJun" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="MapFlowSumJanToJun" msprop:Generator_UserDSName="MapFlowSumJanToJun">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DTJanToJunSum" msprop:Generator_TableClassName="DTJanToJunSumDataTable" msprop:Generator_TableVarName="tableDTJanToJunSum" msprop:Generator_RowChangedName="DTJanToJunSumRowChanged" msprop:Generator_TablePropName="DTJanToJunSum" msprop:Generator_RowDeletingName="DTJanToJunSumRowDeleting" msprop:Generator_RowChangingName="DTJanToJunSumRowChanging" msprop:Generator_RowEvHandlerName="DTJanToJunSumRowChangeEventHandler" msprop:Generator_RowDeletedName="DTJanToJunSumRowDeleted" msprop:Generator_RowClassName="DTJanToJunSumRow" msprop:Generator_UserTableName="DTJanToJunSum" msprop:Generator_RowEvArgName="DTJanToJunSumRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MSOCODE" msprop:Generator_ColumnVarNameInTable="columnMSOCODE" msprop:Generator_ColumnPropNameInRow="MSOCODE" msprop:Generator_ColumnPropNameInTable="MSOCODEColumn" msprop:Generator_UserColumnName="MSOCODE" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="6" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TYPEDESC" msprop:Generator_ColumnVarNameInTable="columnTYPEDESC" msprop:Generator_ColumnPropNameInRow="TYPEDESC" msprop:Generator_ColumnPropNameInTable="TYPEDESCColumn" msprop:Generator_UserColumnName="TYPEDESC" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="60" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PRODDESC" msprop:Generator_ColumnVarNameInTable="columnPRODDESC" msprop:Generator_ColumnPropNameInRow="PRODDESC" msprop:Generator_ColumnPropNameInTable="PRODDESCColumn" msprop:Generator_UserColumnName="PRODDESC" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="60" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CODE" msprop:Generator_ColumnVarNameInTable="columnCODE" msprop:Generator_ColumnPropNameInRow="CODE" msprop:Generator_ColumnPropNameInTable="CODEColumn" msprop:Generator_UserColumnName="CODE" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="24" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="balance" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnbalance" msprop:Generator_ColumnPropNameInRow="balance" msprop:Generator_ColumnPropNameInTable="balanceColumn" msprop:Generator_UserColumnName="balance" type="xs:double" minOccurs="0" />
+              <xs:element name="JANORD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnJANORD" msprop:Generator_ColumnPropNameInRow="JANORD" msprop:Generator_ColumnPropNameInTable="JANORDColumn" msprop:Generator_UserColumnName="JANORD" type="xs:short" minOccurs="0" />
+              <xs:element name="JAN" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnJAN" msprop:Generator_ColumnPropNameInRow="JAN" msprop:Generator_ColumnPropNameInTable="JANColumn" msprop:Generator_UserColumnName="JAN" type="xs:short" minOccurs="0" />
+              <xs:element name="FEBORD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnFEBORD" msprop:Generator_ColumnPropNameInRow="FEBORD" msprop:Generator_ColumnPropNameInTable="FEBORDColumn" msprop:Generator_UserColumnName="FEBORD" type="xs:short" minOccurs="0" />
+              <xs:element name="FEB" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnFEB" msprop:Generator_ColumnPropNameInRow="FEB" msprop:Generator_ColumnPropNameInTable="FEBColumn" msprop:Generator_UserColumnName="FEB" type="xs:short" minOccurs="0" />
+              <xs:element name="MARORD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnMARORD" msprop:Generator_ColumnPropNameInRow="MARORD" msprop:Generator_ColumnPropNameInTable="MARORDColumn" msprop:Generator_UserColumnName="MARORD" type="xs:short" minOccurs="0" />
+              <xs:element name="MAR" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnMAR" msprop:Generator_ColumnPropNameInRow="MAR" msprop:Generator_ColumnPropNameInTable="MARColumn" msprop:Generator_UserColumnName="MAR" type="xs:short" minOccurs="0" />
+              <xs:element name="APRORD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnAPRORD" msprop:Generator_ColumnPropNameInRow="APRORD" msprop:Generator_ColumnPropNameInTable="APRORDColumn" msprop:Generator_UserColumnName="APRORD" type="xs:short" minOccurs="0" />
+              <xs:element name="APR" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnAPR" msprop:Generator_ColumnPropNameInRow="APR" msprop:Generator_ColumnPropNameInTable="APRColumn" msprop:Generator_UserColumnName="APR" type="xs:short" minOccurs="0" />
+              <xs:element name="MAYORD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnMAYORD" msprop:Generator_ColumnPropNameInRow="MAYORD" msprop:Generator_ColumnPropNameInTable="MAYORDColumn" msprop:Generator_UserColumnName="MAYORD" type="xs:short" minOccurs="0" />
+              <xs:element name="MAY" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnMAY" msprop:Generator_ColumnPropNameInRow="MAY" msprop:Generator_ColumnPropNameInTable="MAYColumn" msprop:Generator_UserColumnName="MAY" type="xs:short" minOccurs="0" />
+              <xs:element name="JUNORD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnJUNORD" msprop:Generator_ColumnPropNameInRow="JUNORD" msprop:Generator_ColumnPropNameInTable="JUNORDColumn" msprop:Generator_UserColumnName="JUNORD" type="xs:short" minOccurs="0" />
+              <xs:element name="JUN" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnJUN" msprop:Generator_ColumnPropNameInRow="JUN" msprop:Generator_ColumnPropNameInTable="JUNColumn" msprop:Generator_UserColumnName="JUN" type="xs:short" minOccurs="0" />
+              <xs:element name="TOTAL1" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnTOTAL1" msprop:Generator_ColumnPropNameInRow="TOTAL1" msprop:Generator_ColumnPropNameInTable="TOTAL1Column" msprop:Generator_UserColumnName="TOTAL1" type="xs:short" minOccurs="0" />
+              <xs:element name="TOTAL" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnTOTAL" msprop:Generator_ColumnPropNameInRow="TOTAL" msprop:Generator_ColumnPropNameInTable="TOTALColumn" msprop:Generator_UserColumnName="TOTAL" type="xs:short" minOccurs="0" />
+              <xs:element name="COPIES" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnCOPIES" msprop:Generator_ColumnPropNameInRow="COPIES" msprop:Generator_ColumnPropNameInTable="COPIESColumn" msprop:Generator_UserColumnName="COPIES" type="xs:double" minOccurs="0" />
+              <xs:element name="AMOUNT" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnAMOUNT" msprop:Generator_ColumnPropNameInRow="AMOUNT" msprop:Generator_ColumnPropNameInTable="AMOUNTColumn" msprop:Generator_UserColumnName="AMOUNT" type="xs:double" minOccurs="0" />
+              <xs:element name="UNITPRICE" msprop:Generator_ColumnVarNameInTable="columnUNITPRICE" msprop:Generator_ColumnPropNameInRow="UNITPRICE" msprop:Generator_ColumnPropNameInTable="UNITPRICEColumn" msprop:Generator_UserColumnName="UNITPRICE" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

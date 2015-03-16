@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReceiptAndIssue" targetNamespace="http://tempuri.org/ReceiptAndIssue.xsd" xmlns:mstns="http://tempuri.org/ReceiptAndIssue.xsd" xmlns="http://tempuri.org/ReceiptAndIssue.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Web.config" AppSettingsPropertyName="NPASISConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="NPASISConnectionString (Web.config)" ParameterPrefix="@" PropertyReference="AppConfig.System.Configuration.ConfigurationManager.0.ConnectionStrings.NPASISConnectionString.ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ReceiptAndIssueTableAdapter" GeneratorDataComponentClassName="ReceiptAndIssueTableAdapter" Name="ReceiptAndIssue" UserDataComponentName="ReceiptAndIssueTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="NPASISConnectionString (Web.config)" DbObjectName="NPASIS.dbo.PRODTYPELIB" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>
+SELECT TYPEDESC AS PUBLICATION,COALESCE(INV.COPIES,0) AS BEGBAL,COALESCE(INV.VALUE,0) AS BEGVAL,COALESCE(RCV.COPIES,0) AS RECVCOPIES,COALESCE(RCV.VALUE,0) AS RECVVALUE,
+      COALESCE(INV.COPIES,0)+COALESCE(RCV.COPIES,0) AS ONHANDCOPIES,COALESCE(INV.VALUE,0)+COALESCE(RCV.VALUE,0) AS ONHANDVALUE, 
+       COALESCE(FREE.COPIES,0) AS FREECOPIES,COALESCE(FREE.VALUE,0) AS FREEVALUE,COALESCE(STOCK.COPIES,0) AS STOCKT,COALESCE(STOCK.VALUE,0) AS STOCKTVALUE,
+       COALESCE(SOLD.COPIES,0) AS SOLDCOPIES,COALESCE(SOLD.VALUE,0) AS SOLDVALUE,
+      (COALESCE(INV.COPIES,0)+COALESCE(RCV.COPIES,0))- (COALESCE(FREE.COPIES,0) + COALESCE(STOCK.COPIES,0) + COALESCE(SOLD.COPIES,0)) AS BALCOPIES,
+      (COALESCE(INV.VALUE,0)+COALESCE(RCV.VALUE,0))- (COALESCE(FREE.VALUE,0) + COALESCE(STOCK.VALUE,0) + COALESCE(SOLD.VALUE,0)) AS BALVALUE
+
+FROM [NPASIS].[dbo].[PRODTYPELIB]
+
+
+
+LEFT JOIN
+
+	(SELECT PRODINV.[TYPE],SUM([COUNT]) AS COPIES,SUM([COUNT]) * PRICE  AS VALUE FROM PRODINV
+     LEFT JOIN PRODPRICE ON PRODINV.[TYPE] = PRODPRICE.[TYPE] AND PRODINV.[CODE] = PRODPRICE.[CODE] 
+     WHERE MSOCODE=@MSOCODE AND PRODINV.EFFDATE&lt;@STARTDATE
+     GROUP BY PRODINV.[TYPE],PRODPRICE.[PRICE]) INV
+    
+     ON PRODTYPELIB.[TYPE] = INV.[TYPE]
+
+LEFT JOIN
+
+	(SELECT PRODINV.[TYPE],SUM([COUNT]) AS COPIES,SUM([COUNT]) * PRICE  AS VALUE FROM PRODINV
+     LEFT JOIN PRODPRICE ON PRODINV.[TYPE] = PRODPRICE.[TYPE] AND PRODINV.[CODE] = PRODPRICE.[CODE] 
+     WHERE MSOCODE=@MSOCODE AND PRODINV.EFFDATE BETWEEN @STARTDATE AND @ENDDATE
+     GROUP BY PRODINV.[TYPE],PRODPRICE.[PRICE]) RCV
+    
+    ON PRODTYPELIB.[TYPE] = RCV.[TYPE]
+
+LEFT JOIN
+
+	( SELECT [TYPE],SUM(QTY) AS COPIES,SUM(QTY)*PRICE AS VALUE FROM ORDERDT
+     LEFT JOIN ORDERFL ON ORDERFL.ORDERNO =ORDERDT.ORDERNO AND ORDERFL.MSOCODE =ORDERDT.MSOCODE
+     WHERE (ORDERTYPE ='03' OR ORDERTYPE ='04' ) AND ORDERDT.MSOCODE=@MSOCODE AND ORDERFL.ORDERDATE BETWEEN @STARTDATE AND @ENDDATE
+     GROUP BY [TYPE],PRICE) FREE
+    
+   ON PRODTYPELIB.[TYPE] = FREE.[TYPE]
+
+LEFT JOIN
+
+	( SELECT [TYPE],SUM(QTY) AS COPIES,SUM(QTY)*PRICE AS VALUE FROM ORDERDT
+     LEFT JOIN ORDERFL ON ORDERFL.ORDERNO =ORDERDT.ORDERNO AND ORDERFL.MSOCODE =ORDERDT.MSOCODE
+     WHERE (ORDERTYPE ='05') AND ORDERDT.MSOCODE=@MSOCODE AND ORDERFL.ORDERDATE BETWEEN @STARTDATE AND @ENDDATE
+     GROUP BY [TYPE],PRICE) STOCK
+    
+   ON PRODTYPELIB.[TYPE] = STOCK.[TYPE]
+   
+LEFT JOIN
+
+	( SELECT [TYPE],SUM(QTY) AS COPIES,SUM(QTY)*PRICE AS VALUE FROM ORDERDT
+     LEFT JOIN ORDERFL ON ORDERFL.ORDERNO =ORDERDT.ORDERNO AND ORDERFL.MSOCODE =ORDERDT.MSOCODE
+     WHERE (ORDERTYPE ='02') AND ORDERDT.MSOCODE=@MSOCODE AND ORDERFL.ORDERDATE BETWEEN @STARTDATE AND @ENDDATE
+     GROUP BY [TYPE],PRICE) SOLD
+    
+   ON PRODTYPELIB.[TYPE] = SOLD.[TYPE]   
+
+</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="MSOCODE" ColumnName="" DataSourceName="" DataTypeServer="varchar(6)" DbType="AnsiString" Direction="Input" ParameterName="@MSOCODE" Precision="0" Scale="0" Size="6" SourceColumn="" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="STARTDATE" ColumnName="" DataSourceName="" DataTypeServer="datetime" DbType="DateTime" Direction="Input" ParameterName="@STARTDATE" Precision="0" Scale="0" Size="8" SourceColumn="" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="ENDDATE" ColumnName="" DataSourceName="" DataTypeServer="datetime" DbType="DateTime" Direction="Input" ParameterName="@ENDDATE" Precision="0" Scale="0" Size="8" SourceColumn="" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="PUBLICATION" DataSetColumn="PUBLICATION" />
+              <Mapping SourceColumn="BEGBAL" DataSetColumn="BEGBAL" />
+              <Mapping SourceColumn="BEGVAL" DataSetColumn="BEGVAL" />
+              <Mapping SourceColumn="RECVCOPIES" DataSetColumn="RECVCOPIES" />
+              <Mapping SourceColumn="RECVVALUE" DataSetColumn="RECVVALUE" />
+              <Mapping SourceColumn="ONHANDCOPIES" DataSetColumn="ONHANDCOPIES" />
+              <Mapping SourceColumn="ONHANDVALUE" DataSetColumn="ONHANDVALUE" />
+              <Mapping SourceColumn="FREECOPIES" DataSetColumn="FREECOPIES" />
+              <Mapping SourceColumn="FREEVALUE" DataSetColumn="FREEVALUE" />
+              <Mapping SourceColumn="STOCKT" DataSetColumn="STOCKT" />
+              <Mapping SourceColumn="STOCKTVALUE" DataSetColumn="STOCKTVALUE" />
+              <Mapping SourceColumn="SOLDCOPIES" DataSetColumn="SOLDCOPIES" />
+              <Mapping SourceColumn="SOLDVALUE" DataSetColumn="SOLDVALUE" />
+              <Mapping SourceColumn="BALCOPIES" DataSetColumn="BALCOPIES" />
+              <Mapping SourceColumn="BALVALUE" DataSetColumn="BALVALUE" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReceiptAndIssue" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="ReceiptAndIssue" msprop:Generator_UserDSName="ReceiptAndIssue">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ReceiptAndIssue" msprop:Generator_TableClassName="ReceiptAndIssueDataTable" msprop:Generator_TableVarName="tableReceiptAndIssue" msprop:Generator_TablePropName="_ReceiptAndIssue" msprop:Generator_RowDeletingName="ReceiptAndIssueRowDeleting" msprop:Generator_RowChangingName="ReceiptAndIssueRowChanging" msprop:Generator_RowEvHandlerName="ReceiptAndIssueRowChangeEventHandler" msprop:Generator_RowDeletedName="ReceiptAndIssueRowDeleted" msprop:Generator_UserTableName="ReceiptAndIssue" msprop:Generator_RowChangedName="ReceiptAndIssueRowChanged" msprop:Generator_RowEvArgName="ReceiptAndIssueRowChangeEvent" msprop:Generator_RowClassName="ReceiptAndIssueRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PUBLICATION" msprop:Generator_ColumnVarNameInTable="columnPUBLICATION" msprop:Generator_ColumnPropNameInRow="PUBLICATION" msprop:Generator_ColumnPropNameInTable="PUBLICATIONColumn" msprop:Generator_UserColumnName="PUBLICATION" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="60" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="BEGBAL" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnBEGBAL" msprop:Generator_ColumnPropNameInRow="BEGBAL" msprop:Generator_ColumnPropNameInTable="BEGBALColumn" msprop:Generator_UserColumnName="BEGBAL" type="xs:double" minOccurs="0" />
+              <xs:element name="BEGVAL" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnBEGVAL" msprop:Generator_ColumnPropNameInRow="BEGVAL" msprop:Generator_ColumnPropNameInTable="BEGVALColumn" msprop:Generator_UserColumnName="BEGVAL" type="xs:double" minOccurs="0" />
+              <xs:element name="RECVCOPIES" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRECVCOPIES" msprop:Generator_ColumnPropNameInRow="RECVCOPIES" msprop:Generator_ColumnPropNameInTable="RECVCOPIESColumn" msprop:Generator_UserColumnName="RECVCOPIES" type="xs:double" minOccurs="0" />
+              <xs:element name="RECVVALUE" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRECVVALUE" msprop:Generator_ColumnPropNameInRow="RECVVALUE" msprop:Generator_ColumnPropNameInTable="RECVVALUEColumn" msprop:Generator_UserColumnName="RECVVALUE" type="xs:double" minOccurs="0" />
+              <xs:element name="ONHANDCOPIES" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnONHANDCOPIES" msprop:Generator_ColumnPropNameInRow="ONHANDCOPIES" msprop:Generator_ColumnPropNameInTable="ONHANDCOPIESColumn" msprop:Generator_UserColumnName="ONHANDCOPIES" type="xs:double" minOccurs="0" />
+              <xs:element name="ONHANDVALUE" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnONHANDVALUE" msprop:Generator_ColumnPropNameInRow="ONHANDVALUE" msprop:Generator_ColumnPropNameInTable="ONHANDVALUEColumn" msprop:Generator_UserColumnName="ONHANDVALUE" type="xs:double" minOccurs="0" />
+              <xs:element name="FREECOPIES" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnFREECOPIES" msprop:Generator_ColumnPropNameInRow="FREECOPIES" msprop:Generator_ColumnPropNameInTable="FREECOPIESColumn" msprop:Generator_UserColumnName="FREECOPIES" type="xs:int" minOccurs="0" />
+              <xs:element name="FREEVALUE" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnFREEVALUE" msprop:Generator_ColumnPropNameInRow="FREEVALUE" msprop:Generator_ColumnPropNameInTable="FREEVALUEColumn" msprop:Generator_UserColumnName="FREEVALUE" type="xs:double" minOccurs="0" />
+              <xs:element name="STOCKT" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnSTOCKT" msprop:Generator_ColumnPropNameInRow="STOCKT" msprop:Generator_ColumnPropNameInTable="STOCKTColumn" msprop:Generator_UserColumnName="STOCKT" type="xs:int" minOccurs="0" />
+              <xs:element name="STOCKTVALUE" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnSTOCKTVALUE" msprop:Generator_ColumnPropNameInRow="STOCKTVALUE" msprop:Generator_ColumnPropNameInTable="STOCKTVALUEColumn" msprop:Generator_UserColumnName="STOCKTVALUE" type="xs:double" minOccurs="0" />
+              <xs:element name="SOLDCOPIES" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnSOLDCOPIES" msprop:Generator_ColumnPropNameInRow="SOLDCOPIES" msprop:Generator_ColumnPropNameInTable="SOLDCOPIESColumn" msprop:Generator_UserColumnName="SOLDCOPIES" type="xs:int" minOccurs="0" />
+              <xs:element name="SOLDVALUE" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnSOLDVALUE" msprop:Generator_ColumnPropNameInRow="SOLDVALUE" msprop:Generator_ColumnPropNameInTable="SOLDVALUEColumn" msprop:Generator_UserColumnName="SOLDVALUE" type="xs:double" minOccurs="0" />
+              <xs:element name="BALCOPIES" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnBALCOPIES" msprop:Generator_ColumnPropNameInRow="BALCOPIES" msprop:Generator_ColumnPropNameInTable="BALCOPIESColumn" msprop:Generator_UserColumnName="BALCOPIES" type="xs:double" minOccurs="0" />
+              <xs:element name="BALVALUE" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnBALVALUE" msprop:Generator_ColumnPropNameInRow="BALVALUE" msprop:Generator_ColumnPropNameInTable="BALVALUEColumn" msprop:Generator_UserColumnName="BALVALUE" type="xs:double" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

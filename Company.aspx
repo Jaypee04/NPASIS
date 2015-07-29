@@ -11,7 +11,7 @@
         
         <tr>
             <td>&nbsp;&nbsp;<h6>COMPANY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      `       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -59,7 +59,9 @@
                         DataSourceID="SqlDataSourceBranch" Height="29px" Width="422px" 
                         DataTextField="BRDESC" DataValueField="COBRANCH" TabIndex="2" 
                         AutoPostBack="True" Enabled="False">
-                      </asp:DropDownList>
+                      </asp:DropDownList>            
+                      <asp:Button ID="btnSelect1" runat="server" Text="Select" Enabled="False"/> 
+            
                       <br />
                       &nbsp;&nbsp;&nbsp;&nbsp;<h6>CLIENT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -78,11 +80,17 @@
                         TabIndex="3" DataTextField="FULLNAME" DataValueField="CLIENTCODE" 
                         AutoPostBack="True" Enabled="False">
                       </asp:DropDownList>
+                      <asp:Button ID="btnSelect2" runat="server" Text="Select" Enabled="False"/> 
+            
+                      
             </td>
         </tr>
         <tr>
-            <td>&nbsp;&nbsp;<asp:Label ID="lblCompanyCode" runat="server" Text="Company" 
-                    Visible="False"></asp:Label></td>
+            <td>&nbsp;&nbsp;<asp:Label ID="lblCompanyCode" runat="server" Text="Company" Visible="false"
+                   ></asp:Label >
+                <asp:Label ID="lblBranch" runat="server" Text="" Visible="false"></asp:Label>
+                <asp:Label ID="lblClient" runat="server" Text="" Visible="false"></asp:Label>
+            </td>
             <td align ="center"><asp:Button ID="btnOk" runat="server" Text="OK" Width="78px" 
                     Enabled="False" />&nbsp;
             <asp:Button ID="btnCancel" runat="server" Text="CANCEL" Enabled="False" /></td>

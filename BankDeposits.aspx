@@ -154,38 +154,46 @@
     </table>
    
     </center>
-    </ContentTemplate> 
-    </asp:UpdatePanel>  
+     
 
     
     <asp:SqlDataSource ID="SqlDataSourceDeposits" runat="server" 
         ConnectionString="<%$ ConnectionStrings:NPASISConnectionString %>" 
-        SelectCommand="SELECT [MSO_CODE], [TYPE], CONVERT(VARCHAR, [DATE], 101) AS DATE, [SLIPNO], [AMOUNT], CONVERT(VARCHAR,[DATEFR], 101) AS DATEFR, CONVERT(VARCHAR,[DATETO], 101) AS DATETO, [ORFR], [ORTO], [COLAMT] FROM [BANKDEPOSITS] WHERE ([MSO_CODE] = @MSO_CODE)">
+            SelectCommand="SELECT MSO_CODE, TYPE, SLIPNO, AMOUNT, CONVERT (VARCHAR, DATEFR, 101) AS DATEFR, CONVERT (VARCHAR, DATETO, 101) AS DATETO, ORFR, ORTO, COLAMT FROM BANKDEPOSITS WHERE (MSO_CODE = @MSOCODE)" 
+            DeleteCommand="DELETE FROM BANKDEPOSITS WHERE MSO_CODE=@MSOCODE AND SLIPNO=@SLIPNO" 
+            UpdateCommand="UPDATE BANKDEPOSITS SET AMOUNT =@AMOUNT, COLAMT=@COLAMT WHERE MSO_CODE=@MSOCODE AND SLIPNO=@SLIPNO">
+        <DeleteParameters>
+            <asp:SessionParameter Name="MSOCODE" SessionField="MSOCODE" Type="String"/>
+            <asp:Parameter Name="SLIPNO" Type="String"/>
+        </DeleteParameters>
         <SelectParameters>
-            <asp:SessionParameter Name="MSO_CODE" SessionField="MSOCODE" Type="String" />
+            <asp:SessionParameter Name="MSOCODE" SessionField="MSOCODE" Type="String" />
         </SelectParameters>
+        <UpdateParameters>
+            <asp:Parameter Name="AMOUNT" Type="String"/>
+            <asp:Parameter Name="COLAMT" Type="String"/>
+            <asp:SessionParameter Name="MSOCODE" SessionField="MSOCODE" Type="String"/>
+            <asp:Parameter Name="SLIPNO" Type="String"/>
+        </UpdateParameters>
     </asp:SqlDataSource>
   
         <h6 align="center"> List of Collections and Deposits </h6>
-        <asp:UpdatePanel ID="UpdatePanel2" runat="server">
-            <ContentTemplate>
+        
+            
                 <asp:GridView ID="grdvwBank" runat="server" AllowPaging="True" 
                     AllowSorting="True" AutoGenerateColumns="False" CellPadding="4" 
                     DataKeyNames="MSO_CODE" DataSourceID="SqlDataSourceDeposits" ForeColor="#333333" 
-                    GridLines="None" HorizontalAlign="Center" PageSize="6" Width="870px" 
+                    GridLines="None" HorizontalAlign="Center" Width="870px" 
                     Font-Size="XX-Small">
-                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                    <AlternatingRowStyle BackColor="White" CssClass="even" />
                     <Columns>
+                        
                         <asp:BoundField DataField="MSO_CODE" HeaderText="MSO" Visible = "false" 
                             SortExpression="MSO_CODE" />
-                        <asp:BoundField DataField="DATE" HeaderText="Date"
-                            SortExpression="DATE" ItemStyle-Width =""/>
                         <asp:BoundField DataField="SLIPNO" HeaderText="Slip No." ReadOnly="true" 
                             SortExpression="SLIPNO" />
                         <asp:BoundField DataField="AMOUNT" HeaderText="Amount" 
                             SortExpression="AMOUNT" />
-                        <%--<asp:BoundField/>
-                        <asp:BoundField/>--%>
                         <asp:BoundField DataField="DATEFR" HeaderText="Date From" 
                             SortExpression="DATEFR" />
                         <asp:BoundField DataField="DATETO" HeaderText="Date To" 
@@ -196,11 +204,8 @@
                             SortExpression="ORTO" />
                         <asp:BoundField DataField="COLAMT" HeaderText="Collection Amount" 
                             SortExpression="COLAMT" />
-                        <asp:BoundField DataField="DTE" HeaderText="DTE" SortExpression="DTE" 
-                            Visible="False" />
-                        <asp:BoundField DataField="USERID" HeaderText="USERID" SortExpression="USERID" 
-                            Visible="False" />
-                        <asp:TemplateField ShowHeader="False">
+                        <asp:CommandField ShowDeleteButton="True" ShowEditButton="True" />
+                       <%-- <asp:TemplateField ShowHeader="False">
                             <EditItemTemplate>
                                 <asp:Button ID="Button1" runat="server" CausesValidation="True" 
                                     CommandName="Update" Text="Update" />
@@ -208,12 +213,12 @@
                                     CommandName="Cancel" Text="Cancel" />
                             </EditItemTemplate>
                             <ItemTemplate>
-                                <asp:Button ID="Button1" runat="server" CausesValidation="False" 
+                                <asp:Button ID="btnEdit" runat="server" CausesValidation="False" 
                                     CommandName="Edit" Text="Edit" />
-                                &nbsp;<asp:Button ID="Button2" runat="server" CausesValidation="False" 
+                                &nbsp;<asp:Button ID="btnDelete" runat="server" CausesValidation="False" 
                                     CommandName="Delete" OnClientClick="return confirm('Delete record?')" Text="Delete" />
                             </ItemTemplate>
-                        </asp:TemplateField>
+                        </asp:TemplateField>--%>
                     </Columns>
                     <EditRowStyle BackColor="#999999" />
                     <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />

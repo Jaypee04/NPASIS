@@ -5,8 +5,7 @@ Partial Class BankDeposits
 
     Protected Sub Page_Load(sender As Object, e As System.EventArgs) Handles Me.Load
 
-        Session("MSOCODE").ToString()
-        'Session("USERID").ToString()
+        grdvwBank.DataBind()
 
     End Sub
 
@@ -26,7 +25,7 @@ Partial Class BankDeposits
             .AddWithValue("@COLAMOUNT", txtAmount2.Text)
             .AddWithValue("@DEPOSITTO", lblValue.Text)
             .AddWithValue("@DTE", Date.Now())
-            .AddWithValue("@USERID", Session("USERID"))
+            .AddWithValue("@USERID", Session("User"))
         End With
         connBankDepositSave.Open()
         cmdBankDeposit.ExecuteNonQuery()

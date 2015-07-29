@@ -64,6 +64,7 @@
             <div class="loginDisplay">                
                 <asp:LoginName ID="LoginName1" runat="server" />
                 <br/> 
+                <asp:Label ID="lblMSO" runat="server" Text="[MSO]"></asp:Label>
                 <br/> <br/>
 
                 <asp:LoginStatus ID="LoginStatus1" runat="server" />
@@ -73,16 +74,16 @@
                 <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
                     <Items>
                         <asp:MenuItem Text="Transaction" Value="Transaction">
-                            <asp:MenuItem Text="MSO Order Slip" Value="MSO Order Slip">
-                                <asp:MenuItem Text="Paid Order Slip" Value="Paid Order Slip"></asp:MenuItem>
-                                <%--<asp:MenuItem Text="Free Issue" Value="Free Issue"></asp:MenuItem>
+                            <asp:MenuItem Text="MSO" Value="MSO Order Slip">
+                                <asp:MenuItem Text="Paid Order Slip" Value="Paid Order Slip" NavigateUrl = "~/ClientOrderSlip.aspx"></asp:MenuItem>
+                                <asp:MenuItem Text="Free Issue" Value="Free Issue"></asp:MenuItem>
                                 <asp:MenuItem Text="Stock Transfer" Value="Stock Transfer"></asp:MenuItem>
-                                <asp:MenuItem Text="Wastage" Value="Wastage"></asp:MenuItem>--%>
+                                <asp:MenuItem Text="Wastage" Value="Wastage"></asp:MenuItem>
                             </asp:MenuItem>
                             <asp:MenuItem Text="ICSU Order Slip" Value="ICSU Order Slip"></asp:MenuItem>
                             <asp:MenuItem Text="Client Inquiry" Value="Client Inquiry"></asp:MenuItem>
                             <asp:MenuItem Text="Client Feedback" Value="Client Feedback"></asp:MenuItem>
-                            <asp:MenuItem Text="Bank Transaction" Value="Bank Transaction"></asp:MenuItem>
+                            <asp:MenuItem Text="Bank Transaction" NavigateUrl = "~/BankDeposits.aspx" Value="Bank Transaction"></asp:MenuItem>
                         </asp:MenuItem>
                         <asp:MenuItem Text="Inquiry" Value="Inquiry">
                             <asp:MenuItem Text="Product Inquiry" NavigateUrl = "~/ProductInquiry.aspx" Value="Product Inquiry"></asp:MenuItem>

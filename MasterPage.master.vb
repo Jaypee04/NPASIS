@@ -3,7 +3,7 @@ Partial Class MasterPage
     Inherits System.Web.UI.MasterPage
 
     Protected Sub Page_Load(sender As Object, e As System.EventArgs) Handles Me.Load
-        'lblLoginMessage.Text = Session("USERID") & " " & Session("DTE")
+        lblMSO.Text = Session("MSODESC")
     End Sub
 
     Protected Sub NavigationMenu_MenuItemClick(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.MenuEventArgs) Handles NavigationMenu.MenuItemClick

@@ -41,7 +41,15 @@
             <asp:BoundField DataField="NAME" HeaderText="NAME" SortExpression="NAME">
             <ControlStyle Width="200px" />
             </asp:BoundField>
-            <asp:BoundField DataField="PASS" HeaderText="PASSWORD" SortExpression="PASS"/>
+            
+            <asp:TemplateField HeaderText="PASSWORD">
+                <EditItemTemplate>
+                  <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" Text='<%# Bind("Password") %>'></asp:TextBox>
+                </EditItemTemplate>
+                <ItemTemplate>
+                  <asp:TextBox ID="TextBox2" Enabled="false" runat="server" TextMode="Password" Text='<%# Bind("Password") %>'></asp:TextBox>
+        </ItemTemplate>
+      </asp:TemplateField>
             <asp:BoundField DataField="ACCESSLEVEL" HeaderText="ACCESSLEVEL" SortExpression="ACCESSLEVEL"/>
             <asp:BoundField DataField="MSOCODE" HeaderText="MSOCODE" SortExpression="MSOCODE" Visible="False" />
             <asp:CommandField ButtonType="Button" ShowInsertButton="True" ValidationGroup="USEGroup" ShowDeleteButton="True" />

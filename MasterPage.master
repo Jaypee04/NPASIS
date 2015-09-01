@@ -5,6 +5,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>NAMRIA Product and Services Information System</title>
+    <script src="alertify/alertify.min.js" type="text/javascript"></script>
+    <script src="alertify/jquery-1.11.3.min.js" type="text/javascript"></script>
+    <link href="alertify/alertify.css" rel="stylesheet" type="text/css" />
+    <link href="alertify/default.css" rel="stylesheet" type="text/css" />
     <link href="App_Themes\Site.css" rel="stylesheet" type="text/css" />
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
@@ -80,10 +84,16 @@
                                 <asp:MenuItem Text="Stock Transfer" Value="Stock Transfer"></asp:MenuItem>
                                 <asp:MenuItem Text="Wastage" Value="Wastage"></asp:MenuItem>
                             </asp:MenuItem>
-                            <asp:MenuItem Text="ICSU Order Slip" Value="ICSU Order Slip"></asp:MenuItem>
+                            <asp:MenuItem Text="ICSU Order Slip" Value="ICSU Order Slip">
+                                <asp:MenuItem Text="Paid Order Slip" Value="Paid Order Slip"></asp:MenuItem>
+                                <asp:MenuItem Text="Free Issue" Value="Free Issue"></asp:MenuItem>
+                            </asp:MenuItem>
                             <asp:MenuItem Text="Client Inquiry" Value="Client Inquiry"></asp:MenuItem>
                             <asp:MenuItem Text="Client Feedback" Value="Client Feedback"></asp:MenuItem>
-                            <asp:MenuItem Text="Bank Transaction" NavigateUrl = "~/BankDeposits.aspx" Value="Bank Transaction"></asp:MenuItem>
+                            <asp:MenuItem Text="Bank Transaction" Value="Bank Transaction">
+                                <asp:MenuItem Text="Deposit" Value="Deposit" NavigateUrl = "~/BankDeposits.aspx"></asp:MenuItem>
+                                <asp:MenuItem Text="Collection" Value="Collection"></asp:MenuItem>
+                            </asp:MenuItem>
                         </asp:MenuItem>
                         <asp:MenuItem Text="Inquiry" Value="Inquiry">
                             <asp:MenuItem Text="Product Inquiry" NavigateUrl = "~/ProductInquiry.aspx" Value="Product Inquiry"></asp:MenuItem>
@@ -136,6 +146,7 @@
                             <asp:MenuItem Text="Sector Library" Value="Sector Library" NavigateUrl = "~/SectorLib.aspx"></asp:MenuItem>
                             <asp:MenuItem Text="Division Library" Value="Division Library" NavigateUrl = "~/DivisionLib.aspx"></asp:MenuItem>
                             <asp:MenuItem Text="Signatory Library" Value="Signatory Library" NavigateUrl = "~/SignatoryLib.aspx"></asp:MenuItem>
+                            <asp:MenuItem Text="Unit Library" Value="Unit Library" NavigateUrl = "~/UnitMaintenance.aspx"></asp:MenuItem>
                             <asp:MenuItem Text="User Maintenance" Value="User Maintenance" NavigateUrl = "~/UserLibrary.aspx"></asp:MenuItem>
                         </asp:MenuItem>
                     </Items>

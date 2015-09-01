@@ -73,6 +73,8 @@ h4
 h5, h6
 {
     font-size: 1em;
+    width: 217px;
+    height: 18px;
 }
 
 /* this rule styles <h1> and <h2> tags that are the 
@@ -416,10 +418,7 @@ div.accountInfo
         text-decoration:underline;
 }
 
-button, input[type="button"], input[type="submit"] { 
-    
-   width: 88px;
-   height: 31px;
+button, input[type="button"], input[type="submit"] {    height: 26px;
 } 
 
  .gridviewProduct
